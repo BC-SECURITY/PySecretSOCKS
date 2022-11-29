@@ -265,16 +265,25 @@ class Listener(asyncore.dispatcher):
         if handler is not None:
             self.handler = handler
         self.client = client
+        self.alive = True
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.set_reuse_addr()
         self.bind((self.host, self.port))
         self.listen(5)
 
     def handle_accept(self):
-        pair = self.accept()
-        if pair is not None:
-            sock, addr = pair
-            handle = self.handler.new_request(sock, addr, self.client)
+        try:
+            pair = self.accept()
+            if pair is not None:
+                sock, addr = pair
+                handle = self.handler.new_request(sock, addr, self.client)
+        except OSError:
+            self.socket.close()
 
     def wait(self):
-        asyncore.loop()
+        while self.alive:
+            asyncore.loop(timeout=1, count=1)
+
+    def stop(self):
+        self.alive = False
+        self.socket.close()
