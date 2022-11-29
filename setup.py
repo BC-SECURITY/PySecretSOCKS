@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='PySecretSOCKS',
-    version='0.8',
+    version='0.9',
     packages=['secretsocks'],
     url='https://github.com/Drewsif/PySecretSOCKS',
     license='MIT',
