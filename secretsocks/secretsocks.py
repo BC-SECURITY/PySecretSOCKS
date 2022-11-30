@@ -26,6 +26,7 @@ class Client():
         # Hard coding this is bad and I feel bad
         self._conns = [deque(range(1, 2048))]
         self._conns.extend([None]*2048)
+        self.alive = True
 
     def recv(self):
         raise NotImplementedError
@@ -265,7 +266,6 @@ class Listener(asyncore.dispatcher):
         if handler is not None:
             self.handler = handler
         self.client = client
-        self.alive = True
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.set_reuse_addr()
         self.bind((self.host, self.port))
@@ -281,9 +281,6 @@ class Listener(asyncore.dispatcher):
             self.socket.close()
 
     def wait(self):
-        while self.alive:
+        while self.client.alive:
             asyncore.loop(timeout=1, count=1)
-
-    def stop(self):
-        self.alive = False
         self.socket.close()
