@@ -17,5 +17,5 @@ setup(
     # TODO: This library should be updated to migrate from pyasyncore to asyncio
     # asyncore was deprecated in python 3.6 and removed in python 3.12. This import
     # is a patch to allow this library to be used in python 3.12 and above.
-    requires=['pyasyncore']
+    install_requires=['pyasyncore']
 )
